@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">ChessFlashCards</string>
     <string name="action_settings">Settings</string>
+    <string name="icon_rook">&#xe184;</string>
+    <string name="icon_knight">&#xe215;</string>
+    <string name="icon_bishop">&#xe214;</string>
+    <string name="icon_queen">&#xe212;</string>
+    <string name="icon_king">&#xe211;</string>
+    <string name="icon_pawn">&#xe213;</string>
+    <string name="icon_empty"></string>
 </resources>
