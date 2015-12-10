@@ -14,6 +14,41 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+        <TextView android:text="" android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/atSquare" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView android:text="Position ID: " android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView android:text="" android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/positionId" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView android:text="Description: " android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView android:text="" android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/positionDescr" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView android:text="FEN: " android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView android:text="" android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/positionFen" />
+        </LinearLayout>
+
+
         <TextView android:text="The Board" android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView" />
@@ -25,11 +60,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView">
         </LinearLayout>
-
-        <TextView android:text="" android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/atSquare" />
-
     </LinearLayout>
 
 

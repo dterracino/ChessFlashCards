@@ -4,12 +4,14 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -22,8 +24,77 @@ import android.widget.TextView;
 import java.util.concurrent.atomic.AtomicInteger;
 import android.widget.LinearLayout;
 
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
 
 public class MainActivity extends AppCompatActivity {
+
+    class ChessPosition {
+        private String id;
+        private String description;
+        private String fen;
+    }
+
+    class Greeting{
+        private String id;
+        private String content;
+    }
+
+    class GetChessPosition extends AsyncTask<Integer, Void, ChessPosition> {
+
+        private Exception exception;
+
+        protected ChessPosition doInBackground(Integer... id) {
+            try {
+                String url = "http://api.digintodata.com/chess/position/{query}";
+                //String url = "http://rest-service.guides.spring.io/greeting";
+                //String url = "https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q={query}";
+                //final String url = "http://api.icndb.com/jokes/random";
+                //String url = "https://api.github.com/users/jltrem";
+
+                RestTemplate restTemplate = new RestTemplate();
+                //restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+
+                Log.d("GetChessPosition", url);
+                String response = restTemplate.getForObject(url, String.class, id[0]);
+                Log.d("GetChessPosition", "complete");
+                ChessPosition position = new ChessPosition();
+                /*position.id = response.id;
+                position.description = response.content;
+                position.fen = response.id;*/
+                position.id = "";
+                position.description = response;
+                position.fen = "";
+                //Log.d("GetChessPosition", position.description);
+                return position;
+            } catch (Exception e) {
+                Log.e("GetChessPosition", e.toString());
+                this.exception = e;
+                return null;
+            }
+        }
+
+        protected void onPostExecute(ChessPosition position) {
+
+            Log.d("GetChessPosition", position != null ? position.toString() : "null");
+            if (position == null)
+            {
+                position = new ChessPosition();
+            }
+            TextView text = (TextView) findViewById(R.id.positionId);
+            text.setText(position.id);
+            text = (TextView) findViewById(R.id.positionDescr);
+            text.setText(position.description);
+            text = (TextView) findViewById(R.id.positionFen);
+            text.setText(position.fen);
+
+            // TODO: check this.exception
+            // TODO: do something with the feed
+        }
+    }
 
     public class OnClickedSquareListener implements View.OnClickListener {
         public void onClick(View v) {
@@ -163,12 +234,13 @@ public class MainActivity extends AppCompatActivity {
 
             boardLayout.addView(rowLayout);
         }
-
-
-        //TextView myTextView=(TextView)findViewById(R.id.);
-        //Typeface typeFace= Typeface.createFromAsset(getAssets(), "glyphicons-halflings-regular.ttf");
-        //myTextView.setTypeface(typeFace);
     }
+
+    protected void onStart() {
+        super.onStart();
+        new GetChessPosition().execute(1);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
