@@ -28,19 +28,7 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-
 public class MainActivity extends AppCompatActivity {
-
-    class ChessPosition {
-        private String id;
-        private String description;
-        private String fen;
-    }
-
-    class Greeting{
-        private String id;
-        private String content;
-    }
 
     class GetChessPosition extends AsyncTask<Integer, Void, ChessPosition> {
 
@@ -48,27 +36,12 @@ public class MainActivity extends AppCompatActivity {
 
         protected ChessPosition doInBackground(Integer... id) {
             try {
-                String url = "http://api.digintodata.com/chess/position/{query}";
-                //String url = "http://rest-service.guides.spring.io/greeting";
-                //String url = "https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q={query}";
-                //final String url = "http://api.icndb.com/jokes/random";
-                //String url = "https://api.github.com/users/jltrem";
+                String url = "http://api.digintodata.com/chess/position/{id}";
 
                 RestTemplate restTemplate = new RestTemplate();
-                //restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-                Log.d("GetChessPosition", url);
-                String response = restTemplate.getForObject(url, String.class, id[0]);
-                Log.d("GetChessPosition", "complete");
-                ChessPosition position = new ChessPosition();
-                /*position.id = response.id;
-                position.description = response.content;
-                position.fen = response.id;*/
-                position.id = "";
-                position.description = response;
-                position.fen = "";
-                //Log.d("GetChessPosition", position.description);
+                ChessPosition position = restTemplate.getForObject(url, ChessPosition.class, id[0]);
                 return position;
             } catch (Exception e) {
                 Log.e("GetChessPosition", e.toString());
@@ -85,14 +58,11 @@ public class MainActivity extends AppCompatActivity {
                 position = new ChessPosition();
             }
             TextView text = (TextView) findViewById(R.id.positionId);
-            text.setText(position.id);
+            text.setText(position.id != null ? position.id.toString() : "-1");
             text = (TextView) findViewById(R.id.positionDescr);
             text.setText(position.description);
             text = (TextView) findViewById(R.id.positionFen);
             text.setText(position.fen);
-
-            // TODO: check this.exception
-            // TODO: do something with the feed
         }
     }
 
@@ -183,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+/*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,10 +162,11 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
+*/
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int btnSize = Math.min(metrics.widthPixels, metrics.heightPixels) / 10;
+
+        int btnSize = Math.min(metrics.widthPixels,  metrics.heightPixels) / 9;
 
         LinearLayout boardLayout = (LinearLayout)findViewById(R.id.board_layout);
         boardLayout.setOrientation(LinearLayout.VERTICAL);
@@ -210,14 +181,14 @@ public class MainActivity extends AppCompatActivity {
             {
                 // create the button in the row
                 FontButton btn = new FontButton(this);
-                btn.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                btn.setMinHeight(0);
-                btn.setMinWidth(0);
+                //btn.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 CustomFontHelper.setCustomFont(btn, "fonts/glyphicons.ttf", this);
                 btn.setText(getSquarePieceTextId(rowNdx, colNdx));
                 btn.setTextColor(getSquarePieceColor(rowNdx, colNdx));
-                btn.setWidth(btnSize);
-                btn.setHeight(btnSize);
+                btn.setMinHeight(0);
+                btn.setMinWidth(0);
+                btn.setIncludeFontPadding(false);
+                btn.SquareSize = btnSize;
                 btn.setTextSize(TypedValue.COMPLEX_UNIT_PX, btnSize / 2);
                 btn.setOnClickListener(onClickedSquareListener);
 
