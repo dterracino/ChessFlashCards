@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
             if (position == null)
             {
                 position = new ChessPosition();
+                _atPositionId = 1;
             }
             TextView text = (TextView) findViewById(R.id.positionId);
             text.setText(position.id != null ? position.id.toString() : "-1");
@@ -107,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    private int _atPositionId = 1;
 
     public class OnClickedSquareListener implements View.OnClickListener {
         public void onClick(View v) {
@@ -208,19 +212,17 @@ public class MainActivity extends AppCompatActivity {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        int btnSize = Math.min(metrics.widthPixels,  metrics.heightPixels) / 9;
+        int btnSize = Math.min(metrics.widthPixels, metrics.heightPixels) / 9;
 
-        LinearLayout boardLayout = (LinearLayout)findViewById(R.id.board_layout);
+        LinearLayout boardLayout = (LinearLayout) findViewById(R.id.board_layout);
         boardLayout.setOrientation(LinearLayout.VERTICAL);
 
-        for (int rowNdx = 0; rowNdx < 8; rowNdx++)
-        {
+        for (int rowNdx = 0; rowNdx < 8; rowNdx++) {
             LinearLayout rowLayout = new LinearLayout(this);
             rowLayout.setOrientation(LinearLayout.HORIZONTAL);
             rowLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-            for(int colNdx = 0; colNdx < 8; colNdx++)
-            {
+            for (int colNdx = 0; colNdx < 8; colNdx++) {
                 // create the button in the row
                 FontButton btn = new FontButton(this);
                 //btn.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -247,11 +249,28 @@ public class MainActivity extends AppCompatActivity {
 
             boardLayout.addView(rowLayout);
         }
+
+        Button btnNext = (Button) findViewById(R.id.nextPos);
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                _atPositionId++;
+                new GetChessPosition().execute(_atPositionId);
+            }
+        });
+
+        Button btnPrev = (Button) findViewById(R.id.prevPos);
+        btnPrev.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                _atPositionId--;
+                new GetChessPosition().execute(_atPositionId);
+            }
+        });
+
     }
 
     protected void onStart() {
         super.onStart();
-        new GetChessPosition().execute(1);
+        new GetChessPosition().execute(_atPositionId);
     }
 
 
