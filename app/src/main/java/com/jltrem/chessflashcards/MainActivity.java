@@ -63,6 +63,48 @@ public class MainActivity extends AppCompatActivity {
             text.setText(position.description);
             text = (TextView) findViewById(R.id.positionFen);
             text.setText(position.fen);
+
+            if (position.ParseFen()){
+
+                for (int rowNdx = 0; rowNdx < 8; rowNdx++) {
+                    for (int colNdx = 0; colNdx < 8; colNdx++) {
+                        ChessPosition.Piece piece = position.getPiece(rowNdx, colNdx);
+                        int stringId = R.string.icon_empty;
+                        switch (piece){
+                            case PAWN:
+                                stringId = R.string.icon_pawn;
+                                break;
+                            case ROOK:
+                                stringId = R.string.icon_rook;
+                                break;
+                            case KNIGHT:
+                                stringId = R.string.icon_knight;
+                                break;
+                            case BISHOP:
+                                stringId = R.string.icon_bishop;
+                                break;
+                            case QUEEN:
+                                stringId = R.string.icon_queen;
+                                break;
+                            case KING:
+                                stringId = R.string.icon_king;
+                                break;
+                            case NONE:
+                            default:
+                                stringId = R.string.icon_empty;
+                                break;
+                        }
+                        squarePieceText[rowNdx][colNdx] = stringId;
+
+                        ChessPosition.PieceColor pieceColor = position.getPieceColor(rowNdx, colNdx);
+                        squarePieceColor[rowNdx][colNdx] = (pieceColor == ChessPosition.PieceColor.WHITE) ? Color.WHITE : Color.BLACK;
+
+                        FontButton btn = (FontButton) findViewById(squareBtnId[rowNdx][colNdx]);
+                        btn.setText(getSquarePieceTextId(rowNdx, colNdx));
+                        btn.setTextColor(getSquarePieceColor(rowNdx, colNdx));
+                    }
+                }
+            }
         }
     }
 
